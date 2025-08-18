@@ -2,92 +2,135 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>World Capitals</title>
+  <title>World Capitals Quiz</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; background: #f9f9f9; }
-    .page { display: none; }
-    .active { display: block; }
-    .question, .anecdote {
-      background: #fff; padding: 15px; margin: 10px auto;
-      border-radius: 10px; max-width: 600px;
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      padding: 20px;
+    }
+    nav {
+      margin-bottom: 20px;
+    }
+    nav button {
+      padding: 10px 15px;
+      margin-right: 10px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    nav button:hover {
+      background: #0056b3;
+    }
+    .page {
+      display: none;
+    }
+    .active {
+      display: block;
+    }
+    .question {
+      background: #fff;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 10px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-    button { margin: 10px; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; }
+    input[type="text"] {
+      padding: 6px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      width: 200px;
+    }
+    .result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    .correct {
+      color: green;
+    }
+    .wrong {
+      color: red;
+    }
   </style>
 </head>
 <body>
-  <h1>🌍 World Capitals</h1>
-
-  <!-- HOME -->
-  <div id="home" class="page active">
-    <button type="button" onclick="showPage('quiz')">Quiz</button>
-    <button type="button" onclick="showPage('anecdotes')">Anecdotes</button>
-  </div>
-
-  <!-- QUIZ -->
-  <div id="quiz" class="page">
+  <h1>World Capitals Project</h1>
+  
+  <!-- Navigation -->
+  <nav>
+    <button onclick="showPage('quiz')">Quiz</button>
+    <button onclick="showPage('anecdotes')">Anecdotes</button>
+  </nav>
+  
+  <!-- Quiz Page -->
+  <div id="quiz" class="page active">
     <h2>World Capitals Quiz</h2>
-    <form id="quiz-form"></form>
-    <div id="result"></div>
+    <form id="quizForm"></form>
     <button type="button" onclick="checkAnswers()">Submit</button>
-    <button type="button" onclick="showPage('home')">⬅ Back</button>
+    <div class="result" id="result"></div>
   </div>
-
-  <!-- ANECDOTES -->
+  
+  <!-- Anecdotes Page -->
   <div id="anecdotes" class="page">
-    <h2>Capital Anecdotes</h2>
-    <div id="anecdote-list"></div>
-    <button type="button" onclick="showPage('home')">⬅ Back</button>
+    <h2>Anecdotes</h2>
+    <div id="anecdoteList"></div>
   </div>
-
+  
   <script>
-    // SMALL test dataset (just 2 countries!)
+    // Example dataset
     const countries = [
-      { country: "France", capital: "Paris", trivia: ["Nicknamed the City of Light."] },
-      { country: "Algeria", capital: "Algiers", trivia: ["Called 'the White City'."] }
+      { country: "Afghanistan", capital: "Kabul", trivia: "This city lies about 1,800 meters above sea level in the Hindu Kush mountains." },
+      { country: "Algeria", capital: "Algiers", trivia: "The capital is nicknamed 'the White City' because of its gleaming whitewashed buildings." },
+      { country: "France", capital: "Paris", trivia: "Nicknamed the City of Light, Paris was one of the first European cities to use street lighting." }
     ];
 
-    function showPage(id) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-    }
-
-    // Build quiz
-    const quizForm = document.getElementById("quiz-form");
+    // Render quiz questions
+    const quizContainer = document.getElementById("quizForm");
     countries.forEach((q, i) => {
-      quizForm.innerHTML += `
-        <div class="question">
-          <p><strong>Q${i+1}:</strong> What is the capital of ${q.country}?</p>
-          <input type="text" name="q${i}" placeholder="Type your answer">
-        </div>
+      const div = document.createElement("div");
+      div.classList.add("question");
+      div.innerHTML = `
+        <p><strong>Q${i+1}:</strong> What is the capital of ${q.country}?</p>
+        <input type="text" name="q${i}" placeholder="Type your answer">
       `;
+      quizContainer.appendChild(div);
     });
 
+    // Check answers
     function checkAnswers() {
       let score = 0;
       countries.forEach((q, i) => {
         const input = document.querySelector(\`input[name="q\${i}"]\`);
-        if (input.value.trim().toLowerCase() === q.capital.toLowerCase()) {
+        const userAnswer = input.value.trim().toLowerCase();
+        const correctAnswer = q.capital.trim().toLowerCase();
+        if (userAnswer === correctAnswer) {
           input.style.borderColor = "green";
           score++;
         } else {
           input.style.borderColor = "red";
+          input.value = \`\${input.value} ❌ (Correct: \${q.capital})\`;
         }
       });
-      document.getElementById("result").textContent =
-        \`You got \${score} out of \${countries.length} correct!\`;
+      document.getElementById("result").innerHTML =
+        \`You got <span class="correct">\${score}</span> out of \${countries.length} correct!\`;
     }
 
-    // Build anecdotes
-    const anecdoteList = document.getElementById("anecdote-list");
+    // Render anecdotes
+    const anecdoteList = document.getElementById("anecdoteList");
     countries.forEach(q => {
-      anecdoteList.innerHTML += `
-        <div class="anecdote">
-          <h3>${q.capital}, ${q.country}</h3>
-          <ul>${q.trivia.map(t => `<li>${t}</li>`).join("")}</ul>
-        </div>
-      `;
+      const div = document.createElement("div");
+      div.classList.add("question");
+      div.innerHTML = \`<strong>\${q.capital}:</strong> \${q.trivia}\`;
+      anecdoteList.appendChild(div);
     });
+
+    // Show/hide pages
+    function showPage(pageId) {
+      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+      document.getElementById(pageId).classList.add("active");
+    }
   </script>
 </body>
 </html>
