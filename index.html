@@ -221,27 +221,38 @@ You said:
     ];
 
 
-    const quizContainer = document.getElementById("quiz");
+  const quizContainer = document.getElementById("quiz");
 
-    countries.forEach((q, i) => {
-      const div = document.createElement("div");
-      div.classList.add("question");
-      div.innerHTML = 
-        <p><strong>Q${i+1}:</strong> What is the capital of ${q.country}?</p>
-        <input type="text" name="q${i}" placeholder="Type your answer">
-        <button type="button" onclick="showTrivia(${i})">Show Trivia</button>
-        <div class="trivia-box" id="trivia-${i}"></div>
-      ;
-      quizContainer.appendChild(div);
-      q.triviaIndex = 0; // track trivia position
-    });
+  countries.forEach((q, i) => {
+    const div = document.createElement("div");
+    div.classList.add("question");
+    div.innerHTML = `
+      <p><strong>Q${i+1}:</strong> What is the capital of ${q.country}?</p>
+      <input type="text" id="input-${i}" placeholder="Type your answer">
+      <button type="button" onclick="checkAnswer(${i})">Check Answer</button>
+      <div class="anecdote-box" id="anecdote-${i}"></div>
+    `;
+    quizContainer.appendChild(div);
+    q.anecdoteIndex = 0; // track anecdote position
+  });
 
-    function showTrivia(index) {
-      const q = countries[index];
-      const box = document.getElementById(trivia-${index});
-      box.textContent = q.trivia[q.triviaIndex];
-      q.triviaIndex = (q.triviaIndex + 1) % q.trivia.length;
+  function checkAnswer(index) {
+    const q = countries[index];
+    const input = document.getElementById(`input-${index}`).value.trim();
+    const box = document.getElementById(`anecdote-${index}`);
+
+    if (input.toLowerCase() === q.capital.toLowerCase()) {
+      if (!q.anecdotes || q.anecdotes.length === 0) {
+        box.textContent = `✅ Correct! The capital is ${q.capital}. (No anecdote available yet)`;
+      } else {
+        box.textContent = `✅ Correct! ${q.anecdotes[q.anecdoteIndex]}`;
+        q.anecdoteIndex = (q.anecdoteIndex + 1) % q.anecdotes.length;
+      }
+    } else {
+      box.textContent = `❌ Not quite. Try again!`;
     }
-  </script>
+  }
+</script>
+
 </body>
 </html>
