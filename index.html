@@ -48,13 +48,13 @@
 
     .page {
       display: none;
-      max-width: 600px;
+      max-width: 700px;
       background: white;
       padding: 20px;
       margin: 10px;
       border-radius: 8px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      text-align: center;
+      text-align: left;
     }
 
     .active {
@@ -73,6 +73,7 @@
     button.action {
       background: #2196F3;
       margin-top: 10px;
+      color: white;
     }
 
     button.action:hover {
@@ -82,6 +83,18 @@
     #feedback {
       margin-top: 15px;
       font-weight: bold;
+    }
+
+    .anecdote-item {
+      margin-bottom: 15px;
+      padding: 10px;
+      border-left: 4px solid #4CAF50;
+      background: #f9f9f9;
+      border-radius: 4px;
+    }
+
+    .anecdote-item strong {
+      color: #4CAF50;
     }
   </style>
 </head>
@@ -106,14 +119,14 @@
   <!-- Anecdotes Page -->
   <div id="anecdotes" class="page">
     <h2>Anecdotes</h2>
-    <p id="anecdote"></p>
-    <button class="action" onclick="nextAnecdote()">Next Anecdote</button>
+    <div id="anecdote-list"></div>
   </div>
 
   <script>
     const countries = [
       { country: "France", capital: "Paris", trivia: "Nicknamed the City of Light because King Louis XIV installed street lights for public safety." },
-      { country: "Algeria", capital: "Algiers", trivia: "The capital is nicknamed 'the White City' because of its whitewashed buildings that gleam in the Mediterranean sun." }
+      { country: "Algeria", capital: "Algiers", trivia: "The capital is nicknamed 'the White City' because of its whitewashed buildings that gleam in the Mediterranean sun." },
+      { country: "Afghanistan", capital: "Kabul", trivia: "This city lies about 1,800 meters above sea level in the Hindu Kush mountains and serves as Afghanistan’s capital." }
     ];
 
     let currentIndex = 0;
@@ -122,7 +135,7 @@
       document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
       document.getElementById(pageId).classList.add("active");
       if (pageId === "quiz") loadQuestion();
-      if (pageId === "anecdotes") loadAnecdote();
+      if (pageId === "anecdotes") loadAnecdotes();
     }
 
     function loadQuestion() {
@@ -146,14 +159,15 @@
       currentIndex = (currentIndex + 1) % countries.length;
     }
 
-    function loadAnecdote() {
-      const q = countries[currentIndex];
-      document.getElementById("anecdote").textContent = q.trivia || "No anecdote yet.";
-    }
-
-    function nextAnecdote() {
-      currentIndex = (currentIndex + 1) % countries.length;
-      loadAnecdote();
+    function loadAnecdotes() {
+      const container = document.getElementById("anecdote-list");
+      container.innerHTML = "";
+      countries.forEach(c => {
+        const div = document.createElement("div");
+        div.className = "anecdote-item";
+        div.innerHTML = `<strong>${c.country} (${c.capital})</strong><br>${c.trivia || "No anecdote yet."}`;
+        container.appendChild(div);
+      });
     }
 
     loadQuestion();
