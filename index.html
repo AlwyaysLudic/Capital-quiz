@@ -1,31 +1,26 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>World Capitals Quiz</title>
   <style>
     body { font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px; }
     .question { background: #fff; padding: 15px; margin-bottom: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    input[type="text"] { padding: 6px; border-radius: 6px; border: 1px solid #ccc; width: 220px; margin-right: 10px; }
-    button { padding: 6px 12px; margin-left: 5px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    input[type="text"] { padding: 6px; border-radius: 6px; border: 1px solid #ccc; width: 200px; }
+    button { padding: 6px 12px; margin-top: 10px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; }
     button:hover { background: #0056b3; }
-    .result { margin-top: 20px; font-weight: bold; }
-    .correct { color: green; }
-    .wrong { color: red; }
-    .hint { margin-left: 10px; color: #555; font-style: italic; display: inline-block; }
+    .trivia-box { margin-top: 8px; font-style: italic; color: #555; }
   </style>
 </head>
 <body>
   <h1>World Capitals Quiz</h1>
   <form id="quiz"></form>
-  <button type="button" onclick="checkAnswers()">Submit</button>
-  <div class="result" id="result"></div>
 
+  
   <script>
     // Single flat array so you can add trivia easily: just fill the "trivia" string.
     const countries = [
-      { country: "Afghanistan", capital: "Kabul", trivia: "This city lies about 1,800 meters above sea level in the Hindu Kush mountains and, as you guessed, serves as Afghanistan’s capital."},
+      { country: "Afghanistan", capital: "Kabul", trivia: ["This city lies about 1,800 meters above sea level in the Hindu Kush mountains and, as you guessed, serves as Afghanistan’s capital."]},
 
       { country: "Albania", capital: "Tirana", trivia: "Known for its colorful buildings, this Balkan capital is the cultural and economic hub of Albania." },
       { country: "Algeria", capital: "Algiers", trivia: "Known as the “White City” for its whitewashed buildings" },
@@ -86,7 +81,7 @@
       { country: "Ethiopia", capital: "Addis Ababa", trivia: "" },
       { country: "Fiji", capital: "Suva", trivia: "" },
       { country: "Finland", capital: "Helsinki", trivia: "" },
-      { country: "France", capital: "Paris", trivia: "" },
+      { country: "France", capital: "Paris", trivia: ["Nicknamed the City of Light, this capital also known for his famous tower named after Gustave Eiffel. It is nicknamed City of Light because in the 1600s, King Louis XIV, for the public safety, installed some street lights."] },
       { country: "Gabon", capital: "Libreville", trivia: "" },
       { country: "Gambia", capital: "Banjul", trivia: "" },
       { country: "Georgia", capital: "Tbilisi", trivia: "" },
@@ -224,74 +219,28 @@
       { country: "Zimbabwe", capital: "Harare", trivia: "" }
     ];
 
+
     const quizContainer = document.getElementById("quiz");
-    const hintProgress = {}; // tracks letters shown per question
 
-    function renderQuiz() {
-      quizContainer.innerHTML = "";
-      countries.forEach((q, i) => {
-        const div = document.createElement("div");
-        div.classList.add("question");
-        div.innerHTML = `
-          <p><strong>Q${i + 1}:</strong> What is the capital of ${q.country}?</p>
-          <input type="text" name="q${i}" placeholder="Type your answer">
-          <button type="button" onclick="showLetterHint(${i})">Letter Hint</button>
-          <button type="button" onclick="showTriviaHint(${i})">Trivia Hint</button>
-          <span id="hint${i}" class="hint"></span>
-        `;
-        quizContainer.appendChild(div);
-      });
+    countries.forEach((q, i) => {
+      const div = document.createElement("div");
+      div.classList.add("question");
+      div.innerHTML = `
+        <p><strong>Q${i+1}:</strong> What is the capital of ${q.country}?</p>
+        <input type="text" name="q${i}" placeholder="Type your answer">
+        <button type="button" onclick="showTrivia(${i})">Show Trivia</button>
+        <div class="trivia-box" id="trivia-${i}"></div>
+      `;
+      quizContainer.appendChild(div);
+      q.triviaIndex = 0; // track trivia position
+    });
+
+    function showTrivia(index) {
+      const q = countries[index];
+      const box = document.getElementById(`trivia-${index}`);
+      box.textContent = q.trivia[q.triviaIndex];
+      q.triviaIndex = (q.triviaIndex + 1) % q.trivia.length;
     }
-
-    function showLetterHint(i) {
-      const capital = countries[i].capital;
-      if (!hintProgress[i]) hintProgress[i] = 1;
-      else if (hintProgress[i] < capital.length) hintProgress[i]++;
-      const revealed = capital.substring(0, hintProgress[i]);
-      const masked = revealed + (hintProgress[i] < capital.length ? "..." : "");
-      document.getElementById(`hint${i}`).textContent = `Hint: ${masked}`;
-    }
-
-    function showTriviaHint(i) {
-      const trivia = countries[i].trivia && countries[i].trivia.trim()
-        ? countries[i].trivia
-        : "No trivia yet — add it in the data!";
-      document.getElementById(`hint${i}`).textContent = `Hint: ${trivia}`;
-    }
-
-    function normalize(str) {
-      return str
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .toLowerCase()
-        .trim();
-    }
-
-    function checkAnswers() {
-      let score = 0;
-      countries.forEach((q, i) => {
-        const input = document.querySelector(`input[name="q${i}"]`);
-        const userAnswer = normalize(input.value);
-        const correctAnswer = normalize(q.capital);
-        if (userAnswer === correctAnswer) {
-          input.style.borderColor = "green";
-          score++;
-        } else {
-          input.style.borderColor = "red";
-          input.value = `${input.value} ❌ (Correct: ${q.capital})`;
-        }
-      });
-      document.getElementById("result").innerHTML =
-        `You got <span class="correct">${score}</span> out of ${countries.length} correct!`;
-    }
-
-    // Expose so inline onclick works
-    window.showLetterHint = showLetterHint;
-    window.showTriviaHint = showTriviaHint;
-    window.checkAnswers = checkAnswers;
-
-    // Render quiz
-    renderQuiz();
   </script>
 </body>
 </html>
