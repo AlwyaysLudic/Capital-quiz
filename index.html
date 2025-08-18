@@ -4,133 +4,81 @@
   <meta charset="UTF-8">
   <title>World Capitals Quiz</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f9f9f9;
-      padding: 20px;
-    }
-    nav {
-      margin-bottom: 20px;
-    }
-    nav button {
-      padding: 10px 15px;
-      margin-right: 10px;
-      background: #007bff;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    nav button:hover {
-      background: #0056b3;
-    }
-    .page {
-      display: none;
-    }
-    .active {
-      display: block;
-    }
-    .question {
-      background: #fff;
-      padding: 15px;
-      margin-bottom: 15px;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    input[type="text"] {
-      padding: 6px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      width: 200px;
-    }
-    .result {
-      margin-top: 20px;
-      font-weight: bold;
-    }
-    .correct {
-      color: green;
-    }
-    .wrong {
-      color: red;
-    }
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .page { display: none; }
+    .active { display: block; }
+    button { margin: 5px; padding: 8px 12px; }
+    input { margin-right: 10px; }
   </style>
 </head>
 <body>
-  <h1>World Capitals Project</h1>
-  
-  <!-- Navigation -->
-  <nav>
-    <button onclick="showPage('quiz')">Quiz</button>
-    <button onclick="showPage('anecdotes')">Anecdotes</button>
-  </nav>
-  
+  <h1>🌍 World Capitals</h1>
+
+  <button onclick="showPage('quiz')">Quiz</button>
+  <button onclick="showPage('anecdotes')">Anecdotes</button>
+
   <!-- Quiz Page -->
   <div id="quiz" class="page active">
-    <h2>World Capitals Quiz</h2>
-    <form id="quizForm"></form>
-    <button type="button" onclick="checkAnswers()">Submit</button>
-    <div class="result" id="result"></div>
+    <h2>Quiz</h2>
+    <p id="question"></p>
+    <input type="text" id="answer" placeholder="Type your answer">
+    <button onclick="checkAnswer()">Submit</button>
+    <p id="feedback"></p>
   </div>
-  
+
   <!-- Anecdotes Page -->
   <div id="anecdotes" class="page">
     <h2>Anecdotes</h2>
-    <div id="anecdoteList"></div>
+    <p id="anecdote"></p>
+    <button onclick="nextAnecdote()">Next Anecdote</button>
   </div>
-  
+
   <script>
-    // Example dataset
     const countries = [
-      { country: "Afghanistan", capital: "Kabul", trivia: "This city lies about 1,800 meters above sea level in the Hindu Kush mountains." },
-      { country: "Algeria", capital: "Algiers", trivia: "The capital is nicknamed 'the White City' because of its gleaming whitewashed buildings." },
-      { country: "France", capital: "Paris", trivia: "Nicknamed the City of Light, Paris was one of the first European cities to use street lighting." }
+      { country: "France", capital: "Paris", trivia: "Nicknamed the City of Light because King Louis XIV installed street lights for public safety." },
+      { country: "Algeria", capital: "Algiers", trivia: "The capital is nicknamed 'the White City' because of its whitewashed buildings that gleam in the Mediterranean sun." }
     ];
 
-    // Render quiz questions
-    const quizContainer = document.getElementById("quizForm");
-    countries.forEach((q, i) => {
-      const div = document.createElement("div");
-      div.classList.add("question");
-      div.innerHTML = `
-        <p><strong>Q${i+1}:</strong> What is the capital of ${q.country}?</p>
-        <input type="text" name="q${i}" placeholder="Type your answer">
-      `;
-      quizContainer.appendChild(div);
-    });
+    let currentIndex = 0;
 
-    // Check answers
-    function checkAnswers() {
-      let score = 0;
-      countries.forEach((q, i) => {
-        const input = document.querySelector(\`input[name="q\${i}"]\`);
-        const userAnswer = input.value.trim().toLowerCase();
-        const correctAnswer = q.capital.trim().toLowerCase();
-        if (userAnswer === correctAnswer) {
-          input.style.borderColor = "green";
-          score++;
-        } else {
-          input.style.borderColor = "red";
-          input.value = \`\${input.value} ❌ (Correct: \${q.capital})\`;
-        }
-      });
-      document.getElementById("result").innerHTML =
-        \`You got <span class="correct">\${score}</span> out of \${countries.length} correct!\`;
-    }
-
-    // Render anecdotes
-    const anecdoteList = document.getElementById("anecdoteList");
-    countries.forEach(q => {
-      const div = document.createElement("div");
-      div.classList.add("question");
-      div.innerHTML = \`<strong>\${q.capital}:</strong> \${q.trivia}\`;
-      anecdoteList.appendChild(div);
-    });
-
-    // Show/hide pages
     function showPage(pageId) {
       document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
       document.getElementById(pageId).classList.add("active");
+      if (pageId === "quiz") loadQuestion();
+      if (pageId === "anecdotes") loadAnecdote();
     }
+
+    function loadQuestion() {
+      const q = countries[currentIndex];
+      document.getElementById("question").textContent = `What is the capital of ${q.country}?`;
+      document.getElementById("answer").value = "";
+      document.getElementById("feedback").textContent = "";
+    }
+
+    function checkAnswer() {
+      const q = countries[currentIndex];
+      const input = document.getElementById("answer");
+      const feedback = document.getElementById("feedback");
+      if (input.value.trim().toLowerCase() === q.capital.toLowerCase()) {
+        feedback.textContent = "✅ Correct!";
+      } else {
+        feedback.textContent = `❌ Wrong! The correct answer is ${q.capital}.`;
+      }
+      currentIndex = (currentIndex + 1) % countries.length;
+    }
+
+    function loadAnecdote() {
+      const q = countries[currentIndex];
+      document.getElementById("anecdote").textContent = q.trivia || "No anecdote yet.";
+    }
+
+    function nextAnecdote() {
+      currentIndex = (currentIndex + 1) % countries.length;
+      loadAnecdote();
+    }
+
+    // Load first question when page opens
+    loadQuestion();
   </script>
 </body>
 </html>
