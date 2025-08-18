@@ -4,25 +4,102 @@
   <meta charset="UTF-8">
   <title>World Capitals Quiz</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    .page { display: none; }
-    .active { display: block; }
-    button { margin: 5px; padding: 8px 12px; }
-    input { margin-right: 10px; }
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f7fa;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      background: #4CAF50;
+      color: white;
+      padding: 20px;
+      margin: 0;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    .nav-buttons {
+      margin: 20px;
+    }
+
+    .nav-buttons button {
+      background: #4CAF50;
+      border: none;
+      color: white;
+      padding: 10px 18px;
+      margin: 5px;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .nav-buttons button:hover {
+      background: #45a049;
+    }
+
+    .page {
+      display: none;
+      max-width: 600px;
+      background: white;
+      padding: 20px;
+      margin: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .active {
+      display: block;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      width: 70%;
+    }
+
+    button.action {
+      background: #2196F3;
+      margin-top: 10px;
+    }
+
+    button.action:hover {
+      background: #0b7dda;
+    }
+
+    #feedback {
+      margin-top: 15px;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
   <h1>🌍 World Capitals</h1>
 
-  <button onclick="showPage('quiz')">Quiz</button>
-  <button onclick="showPage('anecdotes')">Anecdotes</button>
+  <div class="nav-buttons">
+    <button onclick="showPage('quiz')">Quiz</button>
+    <button onclick="showPage('anecdotes')">Anecdotes</button>
+  </div>
 
   <!-- Quiz Page -->
   <div id="quiz" class="page active">
     <h2>Quiz</h2>
     <p id="question"></p>
     <input type="text" id="answer" placeholder="Type your answer">
-    <button onclick="checkAnswer()">Submit</button>
+    <br>
+    <button class="action" onclick="checkAnswer()">Submit</button>
     <p id="feedback"></p>
   </div>
 
@@ -30,7 +107,7 @@
   <div id="anecdotes" class="page">
     <h2>Anecdotes</h2>
     <p id="anecdote"></p>
-    <button onclick="nextAnecdote()">Next Anecdote</button>
+    <button class="action" onclick="nextAnecdote()">Next Anecdote</button>
   </div>
 
   <script>
@@ -61,8 +138,10 @@
       const feedback = document.getElementById("feedback");
       if (input.value.trim().toLowerCase() === q.capital.toLowerCase()) {
         feedback.textContent = "✅ Correct!";
+        feedback.style.color = "green";
       } else {
         feedback.textContent = `❌ Wrong! The correct answer is ${q.capital}.`;
+        feedback.style.color = "red";
       }
       currentIndex = (currentIndex + 1) % countries.length;
     }
@@ -77,7 +156,6 @@
       loadAnecdote();
     }
 
-    // Load first question when page opens
     loadQuestion();
   </script>
 </body>
