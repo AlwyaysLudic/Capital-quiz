@@ -1,1 +1,247 @@
-<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <title>World Capitals Quiz</title> <style> body { font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px; } .question { background: #fff; padding: 15px; margin-bottom: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); } input[type="text"] { padding: 6px; border-radius: 6px; border: 1px solid #ccc; width: 200px; } button { padding: 6px 12px; margin-top: 10px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; } button:hover { background: #0056b3; } .trivia-box { margin-top: 8px; font-style: italic; color: #555; } </style> </head> <body> <h1>World Capitals Quiz</h1> <form id="quiz"></form> <script> // Single flat array so you can add trivia easily: just fill the "trivia" string. const countries = [ { country: "Afghanistan", capital: "Kabul", trivia: ["This city lies about 1,800 meters above sea level in the Hindu Kush mountains and, as you guessed, serves as Afghanistan’s capital."]}, { country: "Albania", capital: "Tirana", trivia: "Known for its colorful buildings, this Balkan capital is the cultural and economic hub of Albania." }, { country: "Algeria", capital: "Algiers", trivia: "Known as the “White City” for its whitewashed buildings" }, { country: "Andorra", capital: "Andorra la Vella", trivia: "The capital's name means 'Andorra the old' when translated from Catalan" }, { country: "Angola", capital: "Luanda", trivia: "Once called São Paulo da Assunção, is today one of the fastest-growing in Africa." }, { country: "Antigua and Barbuda", capital: "Saint John's", trivia: "The capital of Antigua and Barbuda, this city is famous for its cathedral with twin white towers rising above the skyline." }, { country: "Argentina", capital: "Buenos Aires", trivia: "This capital hosted a 1939 chess tournament featuring the two legends, Miguel Najdorf and Paul Keres." }, { country: "Armenia", capital: "Yerevan", trivia: "The well known Alexander Spendiaryan National Academic Opera and Ballet Theatre is a building in Armenia's capital" }, { country: "Australia", capital: "Canberra", trivia: "Lots of people thinks that Sydney or Peurth is Australia's capital but it's actually the one built between them." }, { country: "Austria", capital: "Vienna", trivia: "A place where Mozart came as a young man and, unfortunately, the place where he died too. " }, { country: "Azerbaijan", capital: "Baku", trivia: "Garry Kasparov, a world chess champion, is often nicknamed 'the ogre of...(capital's name'." }, { country: "Bahamas", capital: "Nassau", trivia: "Home to the world’s third-largest barrier reef and a historic pirate stronghold, this tropical capital hosts the vibrant Junkanoo festival every New Year’s Day." }, { country: "Bahrain", capital: "Manama", trivia: "Meaning 'place of rest' in Arabic, this coastal capital is known for its modern skyline, ancient Bahrain Fort, and as a hub for pearl trading in centuries past" }, { country: "Bangladesh", capital: "Dhaka", trivia: "" }, { country: "Barbados", capital: "Bridgetown", trivia: "" }, { country: "Belarus", capital: "Minsk", trivia: "" }, { country: "Belgium", capital: "Brussels", trivia: "" }, { country: "Belize", capital: "Belmopan", trivia: "" }, { country: "Benin", capital: "Porto-Novo", trivia: "" }, { country: "Bhutan", capital: "Thimphu", trivia: "" }, { country: "Bolivia", capital: "Sucre", trivia: "Capital's name is 'sugar' in french language" }, { country: "Bosnia and Herzegovina", capital: "Sarajevo", trivia: "" }, { country: "Botswana", capital: "Gaborone", trivia: "" }, { country: "Brazil", capital: "Brasília", trivia: "" }, { country: "Brunei", capital: "Bandar Seri Begawan", trivia: "" }, { country: "Bulgaria", capital: "Sofia", trivia: "" }, { country: "Burkina Faso", capital: "Ouagadougou", trivia: "" }, { country: "Burundi", capital: "Gitega", trivia: "" }, { country: "Cabo Verde", capital: "Praia", trivia: "" }, { country: "Cambodia", capital: "Phnom Penh", trivia: "" }, { country: "Cameroon", capital: "Yaoundé", trivia: "" }, { country: "Canada", capital: "Ottawa", trivia: "" }, { country: "Central African Republic", capital: "Bangui", trivia: "" }, { country: "Chad", capital: "N'Djamena", trivia: "" }, { country: "Chile", capital: "Santiago", trivia: "" }, { country: "China", capital: "Beijing", trivia: "" }, { country: "Colombia", capital: "Bogotá", trivia: "" }, { country: "Comoros", capital: "Moroni", trivia: "" }, { country: "Congo, Democratic Republic of the", capital: "Kinshasa", trivia: "" }, { country: "Congo, Republic of the", capital: "Brazzaville", trivia: "" }, { country: "Costa Rica", capital: "San José", trivia: "" }, { country: "Côte d'Ivoire", capital: "Yamoussoukro", trivia: "" }, { country: "Croatia", capital: "Zagreb", trivia: "" }, { country: "Cuba", capital: "Havana", trivia: "" }, { country: "Cyprus", capital: "Nicosia", trivia: "" }, { country: "Czech Republic", capital: "Prague", trivia: "" }, { country: "Denmark", capital: "Copenhagen", trivia: "" }, { country: "Djibouti", capital: "Djibouti", trivia: "" }, { country: "Dominica", capital: "Roseau", trivia: "" }, { country: "Dominican Republic", capital: "Santo Domingo", trivia: "" }, { country: "Ecuador", capital: "Quito", trivia: "" }, { country: "Egypt", capital: "Cairo", trivia: "A" }, { country: "El Salvador", capital: "San Salvador", trivia: "" }, { country: "Equatorial Guinea", capital: "Malabo", trivia: "" }, { country: "Eritrea", capital: "Asmara", trivia: "" }, { country: "Estonia", capital: "Tallinn", trivia: "" }, { country: "Eswatini", capital: "Mbabane", trivia: "" }, { country: "Ethiopia", capital: "Addis Ababa", trivia: "" }, { country: "Fiji", capital: "Suva", trivia: "" }, { country: "Finland", capital: "Helsinki", trivia: "" }, { country: "France", capital: "Paris", trivia: ["Nicknamed the Light city, this capital also known for his famous tower named after Gustave Eiffel"] }, { country: "Gabon", capital: "Libreville", trivia: "" }, { country: "Gambia", capital: "Banjul", trivia: "" }, { country: "Georgia", capital: "Tbilisi", trivia: "" }, { country: "Germany", capital: "Berlin", trivia: "" }, { country: "Ghana", capital: "Accra", trivia: "" }, { country: "Greece", capital: "Athens", trivia: "" }, { country: "Grenada", capital: "Saint George's", trivia: "" }, { country: "Guatemala", capital: "Guatemala City", trivia: "" }, { country: "Guinea", capital: "Conakry", trivia: "" }, { country: "Guinea-Bissau", capital: "Bissau", trivia: "" }, { country: "Guyana", capital: "Georgetown", trivia: "" }, { country: "Haiti", capital: "Port-au-Prince", trivia: "" }, { country: "Honduras", capital: "Tegucigalpa", trivia: "" }, { country: "Hungary", capital: "Budapest", trivia: "" }, { country: "Iceland", capital: "Reykjavik", trivia: "Widely known among chess players as the host of the intense 1972 World Championship between Fischer and Spassky. In addition to this landmark event, Reykjavik hosts the annual Reykjavik Open, a prestigious international chess tournament that attracts players from around the globe. " }, { country: "India", capital: "New Delhi", trivia: "" }, { country: "Indonesia", capital: "Jakarta", trivia: "" }, { country: "Iran", capital: "Tehran", trivia: "" }, { country: "Iraq", capital: "Baghdad", trivia: "" }, { country: "Ireland", capital: "Dublin", trivia: "" }, { country: "Israel", capital: "Jerusalem", trivia: "" }, { country: "Italy", capital: "Rome", trivia: "" }, { country: "Jamaica", capital: "Kingston", trivia: "" }, { country: "Japan", capital: "Tokyo", trivia: "" }, { country: "Jordan", capital: "Amman", trivia: "" }, { country: "Kazakhstan", capital: "Astana", trivia: "" }, { country: "Kenya", capital: "Nairobi", trivia: "" }, { country: "Kiribati", capital: "South Tarawa", trivia: "" }, { country: "Kuwait", capital: "Kuwait City", trivia: "" }, { country: "Kyrgyzstan", capital: "Bishkek", trivia: "" }, { country: "Laos", capital: "Vientiane", trivia: "" }, { country: "Latvia", capital: "Riga", trivia: "" }, { country: "Lebanon", capital: "Beirut", trivia: "" }, { country: "Lesotho", capital: "Maseru", trivia: "" }, { country: "Liberia", capital: "Monrovia", trivia: "" }, { country: "Libya", capital: "Tripoli", trivia: "" }, { country: "Liechtenstein", capital: "Vaduz", trivia: "" }, { country: "Lithuania", capital: "Vilnius", trivia: "" }, { country: "Luxembourg", capital: "Luxembourg", trivia: "" }, { country: "Madagascar", capital: "Antananarivo", trivia: "" }, { country: "Malawi", capital: "Lilongwe", trivia: "" }, { country: "Malaysia", capital: "Kuala Lumpur", trivia: "" }, { country: "Maldives", capital: "Malé", trivia: "" }, { country: "Mali", capital: "Bamako", trivia: "" }, { country: "Malta", capital: "Valletta", trivia: "" }, { country: "Marshall Islands", capital: "Majuro", trivia: "" }, { country: "Mauritania", capital: "Nouakchott", trivia: "" }, { country: "Mauritius", capital: "Port Louis", trivia: "" }, { country: "Mexico", capital: "Mexico City", trivia: "" }, { country: "Micronesia", capital: "Palikir", trivia: "" }, { country: "Moldova", capital: "Chișinău", trivia: "" }, { country: "Monaco", capital: "Monaco", trivia: "" }, { country: "Mongolia", capital: "Ulaanbaatar", trivia: "" }, { country: "Montenegro", capital: "Podgorica", trivia: "" }, { country: "Morocco", capital: "Rabat", trivia: "" }, { country: "Mozambique", capital: "Maputo", trivia: "" }, { country: "Myanmar", capital: "Naypyidaw", trivia: "" }, { country: "Namibia", capital: "Windhoek", trivia: "" }, { country: "Nauru", capital: "Yaren District", trivia: "" }, { country: "Nepal", capital: "Kathmandu", trivia: "" }, { country: "Netherlands", capital: "Amsterdam", trivia: "" }, { country: "New Zealand", capital: "Wellington", trivia: "" }, { country: "Nicaragua", capital: "Managua", trivia: "" }, { country: "Niger", capital: "Niamey", trivia: "" }, { country: "Nigeria", capital: "Abuja", trivia: "" }, { country: "North Korea", capital: "Pyongyang", trivia: "" }, { country: "North Macedonia", capital: "Skopje", trivia: "" }, { country: "Norway", capital: "Oslo", trivia: "" }, { country: "Oman", capital: "Muscat", trivia: "" }, { country: "Pakistan", capital: "Islamabad", trivia: "" }, { country: "Palau", capital: "Ngerulmud", trivia: "" }, { country: "Palestine", capital: "East Jerusalem / Ramallah", trivia: "" }, { country: "Panama", capital: "Panama City", trivia: "" }, { country: "Papua New Guinea", capital: "Port Moresby", trivia: "" }, { country: "Paraguay", capital: "Asunción", trivia: "" }, { country: "Peru", capital: "Lima", trivia: "" }, { country: "Philippines", capital: "Manila", trivia: "" }, { country: "Poland", capital: "Warsaw", trivia: "" }, { country: "Portugal", capital: "Lisbon", trivia: "" }, { country: "Qatar", capital: "Doha", trivia: "" }, { country: "Romania", capital: "Bucharest", trivia: "" }, { country: "Russia", capital: "Moscow", trivia: "" }, { country: "Rwanda", capital: "Kigali", trivia: "" }, { country: "Saint Kitts and Nevis", capital: "Basseterre", trivia: "" }, { country: "Saint Lucia", capital: "Castries", trivia: "" }, { country: "Saint Vincent and the Grenadines", capital: "Kingstown", trivia: "" }, { country: "Samoa", capital: "Apia", trivia: "" }, { country: "San Marino", capital: "San Marino", trivia: "" }, { country: "Sao Tome and Principe", capital: "São Tomé", trivia: "" }, { country: "Saudi Arabia", capital: "Riyadh", trivia: "" }, { country: "Senegal", capital: "Dakar", trivia: "" }, { country: "Serbia", capital: "Belgrade", trivia: "" }, { country: "Seychelles", capital: "Victoria", trivia: "" }, { country: "Sierra Leone", capital: "Freetown", trivia: "" }, { country: "Singapore", capital: "Singapore", trivia: "" }, { country: "Slovakia", capital: "Bratislava", trivia: "" }, { country: "Slovenia", capital: "Ljubljana", trivia: "" }, { country: "Solomon Islands", capital: "Honiara", trivia: "" }, { country: "Somalia", capital: "Mogadishu", trivia: "" }, { country: "South Africa", capital: "Pretoria", trivia: "" }, // admin capital for quiz simplicity { country: "South Korea", capital: "Seoul", trivia: "" }, { country: "South Sudan", capital: "Juba", trivia: "" }, { country: "Spain", capital: "Madrid", trivia: "" }, { country: "Sri Lanka", capital: "Sri Jayawardenepura Kotte", trivia: "" }, { country: "Sudan", capital: "Khartoum", trivia: "" }, { country: "Suriname", capital: "Paramaribo", trivia: "" }, { country: "Sweden", capital: "Stockholm", trivia: "" }, { country: "Switzerland", capital: "Bern", trivia: "" }, { country: "Syria", capital: "Damascus", trivia: "" }, { country: "Taiwan", capital: "Taipei", trivia: "" }, { country: "Tajikistan", capital: "Dushanbe", trivia: "" }, { country: "Tanzania", capital: "Dodoma", trivia: "" }, { country: "Thailand", capital: "Bangkok", trivia: "" }, { country: "Timor-Leste", capital: "Dili", trivia: "" }, { country: "Togo", capital: "Lomé", trivia: "" }, { country: "Tonga", capital: "Nuku'alofa", trivia: "" }, { country: "Trinidad and Tobago", capital: "Port of Spain", trivia: "" }, { country: "Tunisia", capital: "Tunis", trivia: "" }, { country: "Turkey", capital: "Ankara", trivia: "" }, { country: "Turkmenistan", capital: "Ashgabat", trivia: "" }, { country: "Tuvalu", capital: "Funafuti", trivia: "" }, { country: "Uganda", capital: "Kampala", trivia: "" }, { country: "Ukraine", capital: "Kyiv", trivia: "" }, { country: "United Arab Emirates", capital: "Abu Dhabi", trivia: "" }, { country: "United Kingdom", capital: "London", trivia: "" }, { country: "United States", capital: "Washington, D.C.", trivia: "" }, { country: "Uruguay", capital: "Montevideo", trivia: "" }, { country: "Uzbekistan", capital: "Tashkent", trivia: "" }, { country: "Vanuatu", capital: "Port Vila", trivia: "" }, { country: "Vatican City", capital: "Vatican City", trivia: "" }, { country: "Venezuela", capital: "Caracas", trivia: "" }, { country: "Vietnam", capital: "Hanoi", trivia: "" }, { country: "Yemen", capital: "Sana'a", trivia: "" }, { country: "Zambia", capital: "Lusaka", trivia: "" }, { country: "Zimbabwe", capital: "Harare", trivia: "" } ]; const quizContainer = document.getElementById("quiz"); countries.forEach((q, i) => { const div = document.createElement("div"); div.classList.add("question"); div.innerHTML = <p><strong>Q${i+1}:</strong> What is the capital of ${q.country}?</p> <input type="text" name="q${i}" placeholder="Type your answer"> <button type="button" onclick="showTrivia(${i})">Show Trivia</button> <div class="trivia-box" id="trivia-${i}"></div> ; quizContainer.appendChild(div); q.triviaIndex = 0; // track trivia position }); function showTrivia(index) { const q = countries[index]; const box = document.getElementById(trivia-${index}); box.textContent = q.trivia[q.triviaIndex]; q.triviaIndex = (q.triviaIndex + 1) % q.trivia.length; } </script> </body> </html>
+You said:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>World Capitals Quiz</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px; }
+    .question { background: #fff; padding: 15px; margin-bottom: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    input[type="text"] { padding: 6px; border-radius: 6px; border: 1px solid #ccc; width: 200px; }
+    button { padding: 6px 12px; margin-top: 10px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    button:hover { background: #0056b3; }
+    .trivia-box { margin-top: 8px; font-style: italic; color: #555; }
+  </style>
+</head>
+<body>
+  <h1>World Capitals Quiz</h1>
+  <form id="quiz"></form>
+
+  
+  <script>
+    // Single flat array so you can add trivia easily: just fill the "trivia" string.
+    const countries = [
+      { country: "Afghanistan", capital: "Kabul", trivia: ["This city lies about 1,800 meters above sea level in the Hindu Kush mountains and, as you guessed, serves as Afghanistan’s capital."]},
+
+      { country: "Albania", capital: "Tirana", trivia: ["Known for its colorful buildings, this Balkan capital is the cultural and economic hub of Albania."] },
+      { country: "Algeria", capital: "Algiers", trivia: ["Known as the “White City” for its whitewashed buildings"] },
+      { country: "Andorra", capital: "Andorra la Vella", trivia: ["The capital's name means 'Andorra the old' when translated from Catalan"] },
+      { country: "Angola", capital: "Luanda", trivia: ["Once called São Paulo da Assunção, is today one of the fastest-growing in Africa."] },
+      { country: "Antigua and Barbuda", capital: "Saint John's", trivia: ["The capital of Antigua and Barbuda, this city is famous for its cathedral with twin white towers rising above the skyline."] },
+      { country: "Argentina", capital: "Buenos Aires", trivia: ["This capital hosted a 1939 chess tournament featuring the two legends, Miguel Najdorf and Paul Keres."] },
+      { country: "Armenia", capital: "Yerevan", trivia: ["The well known Alexander Spendiaryan National Academic Opera and Ballet Theatre is a building in Armenia's capital"] },
+      { country: "Australia", capital: "Canberra", trivia: ["Lots of people thinks that Sydney or Peurth is Australia's capital but it's actually the one built between them."] },
+      { country: "Austria", capital: "Vienna", trivia: ["A place where Mozart came as a young man and, unfortunately, the place where he died too. "] },
+      { country: "Azerbaijan", capital: "Baku", trivia: ["Garry Kasparov, a world chess champion, is often nicknamed 'the ogre of...(capital's name'."] },
+      { country: "Bahamas", capital: "Nassau", trivia: ["Home to the world’s third-largest barrier reef and a historic pirate stronghold, this tropical capital hosts the vibrant Junkanoo festival every New Year’s Day."] },
+      { country: "Bahrain", capital: "Manama", trivia: ["Meaning 'place of rest' in Arabic, this coastal capital is known for its modern skyline, ancient Bahrain Fort, and as a hub for pearl trading in centuries past"] },
+      { country: "Bangladesh", capital: "Dhaka", trivia: "" },
+      { country: "Barbados", capital: "Bridgetown", trivia: "" },
+      { country: "Belarus", capital: "Minsk", trivia: "" },
+      { country: "Belgium", capital: "Brussels", trivia: "" },
+      { country: "Belize", capital: "Belmopan", trivia: "" },
+      { country: "Benin", capital: "Porto-Novo", trivia: "" },
+      { country: "Bhutan", capital: "Thimphu", trivia: "" },
+      { country: "Bolivia", capital: "Sucre", trivia: ["Capital's name is 'sugar' in french language"] },
+      { country: "Bosnia and Herzegovina", capital: "Sarajevo", trivia: "" },
+      { country: "Botswana", capital: "Gaborone", trivia: "" },
+      { country: "Brazil", capital: "Brasília", trivia: "" },
+      { country: "Brunei", capital: "Bandar Seri Begawan", trivia: "" },
+      { country: "Bulgaria", capital: "Sofia", trivia: "" },
+      { country: "Burkina Faso", capital: "Ouagadougou", trivia: "" },
+      { country: "Burundi", capital: "Gitega", trivia: "" },
+      { country: "Cabo Verde", capital: "Praia", trivia: "" },
+      { country: "Cambodia", capital: "Phnom Penh", trivia: "" },
+      { country: "Cameroon", capital: "Yaoundé", trivia: "" },
+      { country: "Canada", capital: "Ottawa", trivia: "" },
+      { country: "Central African Republic", capital: "Bangui", trivia: "" },
+      { country: "Chad", capital: "N'Djamena", trivia: "" },
+      { country: "Chile", capital: "Santiago", trivia: "" },
+      { country: "China", capital: "Beijing", trivia: "" },
+      { country: "Colombia", capital: "Bogotá", trivia: "" },
+      { country: "Comoros", capital: "Moroni", trivia: "" },
+      { country: "Congo, Democratic Republic of the", capital: "Kinshasa", trivia: "" },
+      { country: "Congo, Republic of the", capital: "Brazzaville", trivia: "" },
+      { country: "Costa Rica", capital: "San José", trivia: "" },
+      { country: "Côte d'Ivoire", capital: "Yamoussoukro", trivia: "" },
+      { country: "Croatia", capital: "Zagreb", trivia: "" },
+      { country: "Cuba", capital: "Havana", trivia: "" },
+      { country: "Cyprus", capital: "Nicosia", trivia: "" },
+      { country: "Czech Republic", capital: "Prague", trivia: "" },
+      { country: "Denmark", capital: "Copenhagen", trivia: "" },
+      { country: "Djibouti", capital: "Djibouti", trivia: "" },
+      { country: "Dominica", capital: "Roseau", trivia: "" },
+      { country: "Dominican Republic", capital: "Santo Domingo", trivia: "" },
+      { country: "Ecuador", capital: "Quito", trivia: "" },
+      { country: "Egypt", capital: "Cairo", trivia: "A" },
+      { country: "El Salvador", capital: "San Salvador", trivia: "" },
+      { country: "Equatorial Guinea", capital: "Malabo", trivia: "" },
+      { country: "Eritrea", capital: "Asmara", trivia: "" },
+      { country: "Estonia", capital: "Tallinn", trivia: "" },
+      { country: "Eswatini", capital: "Mbabane", trivia: "" },
+      { country: "Ethiopia", capital: "Addis Ababa", trivia: "" },
+      { country: "Fiji", capital: "Suva", trivia: "" },
+      { country: "Finland", capital: "Helsinki", trivia: "" },
+      { country: "France", capital: "Paris", trivia: ["Nicknamed the City of Light, this capital also known for his famous tower named after Gustave Eiffel. This Nickname came when King Louis XIV, for the public safety, installed streets light. It was one of the first european city to have those."  ] },
+      { country: "Gabon", capital: "Libreville", trivia: "" },
+      { country: "Gambia", capital: "Banjul", trivia: "" },
+      { country: "Georgia", capital: "Tbilisi", trivia: "" },
+      { country: "Germany", capital: "Berlin", trivia: "" },
+      { country: "Ghana", capital: "Accra", trivia: "" },
+      { country: "Greece", capital: "Athens", trivia: "" },
+      { country: "Grenada", capital: "Saint George's", trivia: "" },
+      { country: "Guatemala", capital: "Guatemala City", trivia: "" },
+      { country: "Guinea", capital: "Conakry", trivia: "" },
+      { country: "Guinea-Bissau", capital: "Bissau", trivia: "" },
+      { country: "Guyana", capital: "Georgetown", trivia: "" },
+      { country: "Haiti", capital: "Port-au-Prince", trivia: "" },
+      { country: "Honduras", capital: "Tegucigalpa", trivia: "" },
+      { country: "Hungary", capital: "Budapest", trivia: "" },
+      { country: "Iceland", capital: "Reykjavik", trivia: ["Widely known among chess players as the host of the intense 1972 World Championship between Fischer and Spassky. In addition to this landmark event, Reykjavik hosts the annual Reykjavik Open, a prestigious international chess tournament that attracts players from around the globe. "] },
+      { country: "India", capital: "New Delhi", trivia: "" },
+      { country: "Indonesia", capital: "Jakarta", trivia: "" },
+      { country: "Iran", capital: "Tehran", trivia: "" },
+      { country: "Iraq", capital: "Baghdad", trivia: "" },
+      { country: "Ireland", capital: "Dublin", trivia: "" },
+      { country: "Israel", capital: "Jerusalem", trivia: "" },
+      { country: "Italy", capital: "Rome", trivia: "" },
+      { country: "Jamaica", capital: "Kingston", trivia: "" },
+      { country: "Japan", capital: "Tokyo", trivia: "" },
+      { country: "Jordan", capital: "Amman", trivia: "" },
+      { country: "Kazakhstan", capital: "Astana", trivia: "" },
+      { country: "Kenya", capital: "Nairobi", trivia: "" },
+      { country: "Kiribati", capital: "South Tarawa", trivia: "" },
+      { country: "Kuwait", capital: "Kuwait City", trivia: "" },
+      { country: "Kyrgyzstan", capital: "Bishkek", trivia: "" },
+      { country: "Laos", capital: "Vientiane", trivia: "" },
+      { country: "Latvia", capital: "Riga", trivia: "" },
+      { country: "Lebanon", capital: "Beirut", trivia: "" },
+      { country: "Lesotho", capital: "Maseru", trivia: "" },
+      { country: "Liberia", capital: "Monrovia", trivia: "" },
+      { country: "Libya", capital: "Tripoli", trivia: "" },
+      { country: "Liechtenstein", capital: "Vaduz", trivia: "" },
+      { country: "Lithuania", capital: "Vilnius", trivia: "" },
+      { country: "Luxembourg", capital: "Luxembourg", trivia: "" },
+      { country: "Madagascar", capital: "Antananarivo", trivia: "" },
+      { country: "Malawi", capital: "Lilongwe", trivia: "" },
+      { country: "Malaysia", capital: "Kuala Lumpur", trivia: "" },
+      { country: "Maldives", capital: "Malé", trivia: "" },
+      { country: "Mali", capital: "Bamako", trivia: "" },
+      { country: "Malta", capital: "Valletta", trivia: "" },
+      { country: "Marshall Islands", capital: "Majuro", trivia: "" },
+      { country: "Mauritania", capital: "Nouakchott", trivia: "" },
+      { country: "Mauritius", capital: "Port Louis", trivia: "" },
+      { country: "Mexico", capital: "Mexico City", trivia: "" },
+      { country: "Micronesia", capital: "Palikir", trivia: "" },
+      { country: "Moldova", capital: "Chișinău", trivia: "" },
+      { country: "Monaco", capital: "Monaco", trivia: "" },
+      { country: "Mongolia", capital: "Ulaanbaatar", trivia: "" },
+      { country: "Montenegro", capital: "Podgorica", trivia: "" },
+      { country: "Morocco", capital: "Rabat", trivia: "" },
+      { country: "Mozambique", capital: "Maputo", trivia: "" },
+      { country: "Myanmar", capital: "Naypyidaw", trivia: "" },
+      { country: "Namibia", capital: "Windhoek", trivia: "" },
+      { country: "Nauru", capital: "Yaren District", trivia: "" },
+      { country: "Nepal", capital: "Kathmandu", trivia: "" },
+      { country: "Netherlands", capital: "Amsterdam", trivia: "" },
+      { country: "New Zealand", capital: "Wellington", trivia: "" },
+      { country: "Nicaragua", capital: "Managua", trivia: "" },
+      { country: "Niger", capital: "Niamey", trivia: "" },
+      { country: "Nigeria", capital: "Abuja", trivia: "" },
+      { country: "North Korea", capital: "Pyongyang", trivia: "" },
+      { country: "North Macedonia", capital: "Skopje", trivia: "" },
+      { country: "Norway", capital: "Oslo", trivia: "" },
+      { country: "Oman", capital: "Muscat", trivia: "" },
+      { country: "Pakistan", capital: "Islamabad", trivia: "" },
+      { country: "Palau", capital: "Ngerulmud", trivia: "" },
+      { country: "Palestine", capital: "East Jerusalem / Ramallah", trivia: "" },
+      { country: "Panama", capital: "Panama City", trivia: "" },
+      { country: "Papua New Guinea", capital: "Port Moresby", trivia: "" },
+      { country: "Paraguay", capital: "Asunción", trivia: "" },
+      { country: "Peru", capital: "Lima", trivia: "" },
+      { country: "Philippines", capital: "Manila", trivia: "" },
+      { country: "Poland", capital: "Warsaw", trivia: "" },
+      { country: "Portugal", capital: "Lisbon", trivia: "" },
+      { country: "Qatar", capital: "Doha", trivia: "" },
+      { country: "Romania", capital: "Bucharest", trivia: "" },
+      { country: "Russia", capital: "Moscow", trivia: "" },
+      { country: "Rwanda", capital: "Kigali", trivia: "" },
+      { country: "Saint Kitts and Nevis", capital: "Basseterre", trivia: "" },
+      { country: "Saint Lucia", capital: "Castries", trivia: "" },
+      { country: "Saint Vincent and the Grenadines", capital: "Kingstown", trivia: "" },
+      { country: "Samoa", capital: "Apia", trivia: "" },
+      { country: "San Marino", capital: "San Marino", trivia: "" },
+      { country: "Sao Tome and Principe", capital: "São Tomé", trivia: "" },
+      { country: "Saudi Arabia", capital: "Riyadh", trivia: "" },
+      { country: "Senegal", capital: "Dakar", trivia: "" },
+      { country: "Serbia", capital: "Belgrade", trivia: "" },
+      { country: "Seychelles", capital: "Victoria", trivia: "" },
+      { country: "Sierra Leone", capital: "Freetown", trivia: "" },
+      { country: "Singapore", capital: "Singapore", trivia: "" },
+      { country: "Slovakia", capital: "Bratislava", trivia: "" },
+      { country: "Slovenia", capital: "Ljubljana", trivia: "" },
+      { country: "Solomon Islands", capital: "Honiara", trivia: "" },
+      { country: "Somalia", capital: "Mogadishu", trivia: "" },
+      { country: "South Africa", capital: "Pretoria", trivia: "" },   // admin capital for quiz simplicity
+      { country: "South Korea", capital: "Seoul", trivia: "" },
+      { country: "South Sudan", capital: "Juba", trivia: "" },
+      { country: "Spain", capital: "Madrid", trivia: "" },
+      { country: "Sri Lanka", capital: "Sri Jayawardenepura Kotte", trivia: "" },
+      { country: "Sudan", capital: "Khartoum", trivia: "" },
+      { country: "Suriname", capital: "Paramaribo", trivia: "" },
+      { country: "Sweden", capital: "Stockholm", trivia: "" },
+      { country: "Switzerland", capital: "Bern", trivia: "" },
+      { country: "Syria", capital: "Damascus", trivia: "" },
+      { country: "Taiwan", capital: "Taipei", trivia: "" },
+      { country: "Tajikistan", capital: "Dushanbe", trivia: "" },
+      { country: "Tanzania", capital: "Dodoma", trivia: "" },
+      { country: "Thailand", capital: "Bangkok", trivia: "" },
+      { country: "Timor-Leste", capital: "Dili", trivia: "" },
+      { country: "Togo", capital: "Lomé", trivia: "" },
+      { country: "Tonga", capital: "Nuku'alofa", trivia: "" },
+      { country: "Trinidad and Tobago", capital: "Port of Spain", trivia: "" },
+      { country: "Tunisia", capital: "Tunis", trivia: "" },
+      { country: "Turkey", capital: "Ankara", trivia: "" },
+      { country: "Turkmenistan", capital: "Ashgabat", trivia: "" },
+      { country: "Tuvalu", capital: "Funafuti", trivia: "" },
+      { country: "Uganda", capital: "Kampala", trivia: "" },
+      { country: "Ukraine", capital: "Kyiv", trivia: "" },
+      { country: "United Arab Emirates", capital: "Abu Dhabi", trivia: "" },
+      { country: "United Kingdom", capital: "London", trivia: "" },
+      { country: "United States", capital: "Washington, D.C.", trivia: "" },
+      { country: "Uruguay", capital: "Montevideo", trivia: "" },
+      { country: "Uzbekistan", capital: "Tashkent", trivia: "" },
+      { country: "Vanuatu", capital: "Port Vila", trivia: "" },
+      { country: "Vatican City", capital: "Vatican City", trivia: "" },
+      { country: "Venezuela", capital: "Caracas", trivia: "" },
+      { country: "Vietnam", capital: "Hanoi", trivia: "" },
+      { country: "Yemen", capital: "Sana'a", trivia: "" },
+      { country: "Zambia", capital: "Lusaka", trivia: "" },
+      { country: "Zimbabwe", capital: "Harare", trivia: "" }
+    ];
+
+
+    const quizContainer = document.getElementById("quiz");
+
+    countries.forEach((q, i) => {
+      const div = document.createElement("div");
+      div.classList.add("question");
+      div.innerHTML = 
+        <p><strong>Q${i+1}:</strong> What is the capital of ${q.country}?</p>
+        <input type="text" name="q${i}" placeholder="Type your answer">
+        <button type="button" onclick="showTrivia(${i})">Show Trivia</button>
+        <div class="trivia-box" id="trivia-${i}"></div>
+      ;
+      quizContainer.appendChild(div);
+      q.triviaIndex = 0; // track trivia position
+    });
+
+    function showTrivia(index) {
+      const q = countries[index];
+      const box = document.getElementById(trivia-${index});
+      box.textContent = q.trivia[q.triviaIndex];
+      q.triviaIndex = (q.triviaIndex + 1) % q.trivia.length;
+    }
+  </script>
+</body>
+</html>
