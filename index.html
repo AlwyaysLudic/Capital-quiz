@@ -242,9 +242,9 @@
     if (q.anecdotes && q.anecdotes.length > 0) {
       // pick a random anecdote
       const anecdote = q.anecdotes[Math.floor(Math.random() * q.anecdotes.length)];
-      box.textContent = ` Correct!  ${l}. ${anecdote}`;
+      box.textContent = ` Correct!   ${anecdote}`;
     } else {
-      box.textContent = ` Correct!  ${l}. (No anecdote available yet)`;
+      box.textContent = ` Correct!   (No anecdote available yet)`;
     }
   } else {
     box.textContent = `Not quite. Try again!`;
