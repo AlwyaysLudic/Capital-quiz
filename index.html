@@ -242,12 +242,12 @@
     if (q.anecdotes && q.anecdotes.length > 0) {
       // pick a random anecdote
       const anecdote = q.anecdotes[Math.floor(Math.random() * q.anecdotes.length)];
-      box.textContent = `✅ Correct! The capital is ${q.capital}. ${anecdote}`;
+      box.textContent = ` Correct! The capital is ${q.capital}. ${anecdote}`;
     } else {
-      box.textContent = `✅ Correct! The capital is ${q.capital}. (No anecdote available yet)`;
+      box.textContent = ` Correct! The capital is ${q.capital}. (No anecdote available yet)`;
     }
   } else {
-    box.textContent = `❌ Not quite. Try again!`;
+    box.textContent = `Not quite. Try again!`;
   }
 }
 </script>
